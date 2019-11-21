@@ -1,0 +1,3 @@
+'''
+Bloom filter factory
+'''
