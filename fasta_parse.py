@@ -1,7 +1,7 @@
 from Bio import SeqIO
 import sys
+import os
 
-input_file = sys.argv[1]
 
 def fastaParse(input_file):
     fasta_sequences = SeqIO.parse(open(input_file),'fasta')
@@ -11,4 +11,16 @@ def fastaParse(input_file):
         fasta_dict[name] = sequence
     return(fasta_dict)
 
-print(fastaParse(input_file))
+data_folder = sys.argv[1]
+
+data_dict = {}
+
+for filename in os.listdir(data_folder):
+    ref_id = os.path.splitext(filename)[0]
+    ifile = data_folder + filename
+    data_dict[ref_id] = fastaParse(ifile)
+
+
+
+
+
