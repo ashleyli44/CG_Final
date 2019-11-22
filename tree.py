@@ -2,6 +2,8 @@
 Make the tree
 """
 from queue import Queue
+
+from bloom_factory import BloomFilterFactory
 from node import Node
 
 
@@ -9,7 +11,7 @@ class Tree:
 
     def __init__(self, query_threshold):
         self.root = None
-        self.query_threshold = query_threshold
+        self.query_threshold = query_threshold  # 0 < threshold < 1
 
     def add(self, new_node):
         if self.root is None:
@@ -36,7 +38,7 @@ class Tree:
             else:
                 curr_node = curr_node.left
 
-        parent_bloom_filter = bloom_factory.new_instance()  # TODO: integrate with bloom factory
+        parent_bloom_filter = BloomFilterFactory.new_instance()
         parent_bloom_filter.union(curr_node.bloom_filter)
         parent_bloom_filter.union(new_node.bloom_filter)
 
@@ -65,7 +67,7 @@ class Tree:
                 if curr_node.bloom_filter.contains(kmer):
                     curr_match_count += 1
 
-            if curr_match_count / float(len(kmers) + 1) >= self.query_threshold:  # +1 to avoid div by 0
+            if float(curr_match_count + 1) / float(len(kmers) + 2) >= self.query_threshold:  # +1/2 to avoid div by 0
                 if curr_node.is_leaf():
                     potential_matches.append(curr_node)
                 else:
