@@ -3,7 +3,7 @@ TreeNode that holds a Bloom Filter
 """
 
 
-class Node:
+class BloomNode:
 
     def __init__(self, bloom_filter):
         self.bloom_filter = bloom_filter

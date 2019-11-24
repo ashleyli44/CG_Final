@@ -4,10 +4,10 @@ Make the tree
 from queue import Queue
 
 from bloom_factory import BloomFilterFactory
-from node import Node
+from bloom_node import BloomNode
 
 
-class Tree:
+class BloomTree:
 
     def __init__(self, query_threshold):
         self.root = None
@@ -42,7 +42,7 @@ class Tree:
         parent_bloom_filter.union(curr_node.bloom_filter)
         parent_bloom_filter.union(new_node.bloom_filter)
 
-        new_left_node = Node(curr_node.bloom_filter)
+        new_left_node = BloomNode(curr_node.bloom_filter)
         curr_node.bloom_filter = parent_bloom_filter
 
         curr_node.left = new_left_node
