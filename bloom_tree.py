@@ -9,10 +9,16 @@ from bloom_node import BloomNode
 
 class BloomTree:
 
+    """
+    @param query_threshold is fraction of kmers that need to match in order to declare a read is a match
+    """
     def __init__(self, query_threshold):
         self.root = None
         self.query_threshold = query_threshold  # 0 < threshold < 1
 
+    """
+    @param new_node is Bloom Node to be added to Bloom Tree
+    """
     def add(self, new_node):
         if self.root is None:
             self.root = new_node
@@ -48,6 +54,10 @@ class BloomTree:
         curr_node.left = new_left_node
         curr_node.right = new_node
 
+    """
+    @param kmers is list of kmers from a single read
+    @return list of Bloom Nodes that are potential matches
+    """
     def query(self, kmers):
         if self.root is None:
             return None
@@ -73,3 +83,5 @@ class BloomTree:
                 else:
                     bfs_queue.put(curr_node.left)
                     bfs_queue.put(curr_node.right)
+
+        return potential_matches
