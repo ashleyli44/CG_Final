@@ -7,9 +7,9 @@ import math
 import mmh3
 from bitarray import bitarray
 
-import numpy as np
+#import numpy as np
 
-#from bloom_filter import BloomFilter
+from bloom_filter import BloomFilter
 
 
 class BloomFilterFactory(object):

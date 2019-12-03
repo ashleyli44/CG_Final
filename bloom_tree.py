@@ -85,3 +85,29 @@ class BloomTree:
                     bfs_queue.put(curr_node.right)
 
         return potential_matches
+
+    def treeToString(self, root):
+        str = ''
+        """bases case"""
+        if root is None:
+            return str
+
+        """// push the root data as character"""
+        str += (root.bloom_filter.name + '0')
+
+        """// if leaf node, then return"""
+        if (root.left is None and root.right is None):
+            return str
+
+        """ // for left subtree"""
+        str += ('(')
+        str += treeToString(root.left)
+        str += (')')
+
+        """// only if right child is present to
+        // avoid extra parenthesis"""
+        if (root.right):
+            str += ('(')
+            treeToString(root.right)
+            str += (')')
+        return str
