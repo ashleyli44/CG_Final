@@ -1,10 +1,9 @@
 """
-TreeNode that holds a Bloom Filter
+Bloom Node that holds a Bloom Filter
 """
 
 
 class BloomNode:
-
     def __init__(self, bloom_filter):
         self.bloom_filter = bloom_filter
         self.left = None

@@ -1,5 +1,5 @@
 """
-Make the tree
+Bloom Tree containing Bloom Nodes
 """
 from queue import Queue
 
@@ -14,7 +14,7 @@ class BloomTree:
     """
     def __init__(self, query_threshold):
         self.root = None
-        self.query_threshold = query_threshold  # 0 < threshold < 1
+        self.query_threshold = query_threshold  # 0 < query_threshold < 1
 
     """
     @param new_node is Bloom Node to be added to Bloom Tree

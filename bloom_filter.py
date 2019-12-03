@@ -1,7 +1,7 @@
-'''
+"""
 Bloom filter class
-'''
-import bitarray
+"""
+
 import mmh3
 
 
@@ -32,3 +32,8 @@ class BloomFilter:
             if not self.bvector[hashValue]:
                 return False
         return True
+
+    def union(self, other_bloom_filter):
+        self.name = self.name + " U " + other_bloom_filter.name
+        for i in range(len(self.bvector)):
+            self.bvector[i] = self.bvector[i] or other_bloom_filter.bvector[i]
