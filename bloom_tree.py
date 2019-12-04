@@ -36,9 +36,9 @@ class BloomTree:
                 curr_node.right = new_node
                 return
 
-            leftDistance = curr_node.left.bloom_filter.distanceTo(new_node.bloom_filter)
-            rightDistance = curr_node.right.bloom_filter.distanceTo(new_node.bloom_filter)
-
+            leftDistance = curr_node.left.bloom_filter.compareTo(new_node.bloom_filter)
+            rightDistance = curr_node.right.bloom_filter.compareTo(new_node.bloom_filter)
+            print("Left Dist:" + str(leftDistance) + " Right dist: " + str(rightDistance))
             if rightDistance < leftDistance:
                 curr_node = curr_node.right
             else:
@@ -93,21 +93,20 @@ class BloomTree:
             return str
 
         """// push the root data as character"""
-        str += (root.bloom_filter.name + '0')
-
+        str += (root.bloom_filter.name)
         """// if leaf node, then return"""
         if (root.left is None and root.right is None):
             return str
 
         """ // for left subtree"""
         str += ('(')
-        str += treeToString(root.left)
+        str += self.treeToString(root.left)
         str += (')')
 
         """// only if right child is present to
         // avoid extra parenthesis"""
         if (root.right):
             str += ('(')
-            treeToString(root.right)
+            str += self.treeToString(root.right)
             str += (')')
         return str

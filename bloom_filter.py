@@ -19,7 +19,7 @@ class BloomFilter:
             w/ 0 being the minimum and len(bf) being the maximum
         """
         # exclusive OR and then calculates the number of set bits
-        return (self.bvector ^ bf.vector).count(True)
+        return (self.bvector ^ bf.bvector).count(True)
 
     def add(self, kmer):
         for i in range(self.h):
@@ -34,6 +34,9 @@ class BloomFilter:
         return True
 
     def union(self, other_bloom_filter):
-        self.name = self.name + " U " + other_bloom_filter.name
+        if self.name == "":
+            self.name = other_bloom_filter.name
+        else:
+            self.name = self.name + "U" + other_bloom_filter.name
         for i in range(len(self.bvector)):
             self.bvector[i] = self.bvector[i] or other_bloom_filter.bvector[i]

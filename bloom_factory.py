@@ -8,6 +8,6 @@ from bloom_filter import BloomFilter
 class BloomFilterFactory:
     @staticmethod
     def new_instance(name=""):
-        m = 1000
+        m = 100
         h = 1
         return BloomFilter(name, bitarray(m), h)
