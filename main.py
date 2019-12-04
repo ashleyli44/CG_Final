@@ -46,8 +46,8 @@ def main():
         total_kmerList = total_kmerList + kmerList
 
     fpr = 0.1 
-    BFsize = self.getBFsize(length(total_kmerList), fpr)
-    BFHashCount = self.getHashFunctionCount(length(total_kmerList),rootSize)
+    BFsize = getBFsize(length(total_kmerList), fpr)
+    BFHashCount = getHashFunctionCount(length(total_kmerList),rootSize)
     
     print("Constructing species BFs")
     BFList = []
@@ -71,13 +71,11 @@ def main():
       newNode = BloomNode(bloomFilter)
       inverseBloomTree.add(newNode)   
 
-@classmethod
-def getBFsize(self,n,fpr):
+def getBFsize(n,fpr):
     m = -(n * math.log(fpr)) / (math.log(2) ** 2)
     return int(m)
 
-@classmethod
-def get_hashFunctionCount(self, n, m):
+def get_hashFunctionCount(n, m):
     k = (m / n) * math.log(2)
     return int(k)
 
