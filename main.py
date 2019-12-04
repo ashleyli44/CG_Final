@@ -9,6 +9,12 @@ from fasta_parse import dataParse
 from fasta_parse import goodData
 from fasta_parse import badData
 
+import sys
+import os
+import numpy as np
+import random
+from Bio import SeqIO
+
 def main():
 
     bac_folder = sys.argv[1]
