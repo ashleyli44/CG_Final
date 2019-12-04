@@ -85,11 +85,9 @@ def badData(data_dict, n):
     #creation of the return dictionary as dictionary of dictionaries, same as good data set            
     ret_dict = {} 
     for i in range(0, len(species)):
-      species_dict = {}  
       for j in range(0, num_entries):
             idx = species[i] + "_" + str(j)
-            species_dict[idx] = species_seq[i,j]
-      ret_dict[species[i]] = species_dict 
+            ret_dict[idx] = species_seq[i,j]
     
     return(ret_dict)
 
