@@ -51,8 +51,8 @@ def main():
     
     print("Constructing species BFs")
     BFList = []
-    for species in bad_dict:
-      species_dict = bad_dict[species]
+    for species in bac_dict:
+      species_dict = bac_dict[species]
       kmerList = []
       for readKey in species_dict:
         read = species_dict[readKey]
