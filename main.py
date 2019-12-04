@@ -41,8 +41,8 @@ def main():
         total_kmerList = total_kmerList + kmerList
 
     fpr = 0.1 
-    rootSize = self.getBFsize(length(total_kmerList), fpr)
-    rootHashCount = self.getHashFunctionCount(length(total_kmerList),rootSize)
+    BFsize = self.getBFsize(length(total_kmerList), fpr)
+    BFHashCount = self.getHashFunctionCount(length(total_kmerList),rootSize)
     
     print("Constructing species BFs")
     BFList = []
@@ -54,9 +54,7 @@ def main():
         kmers = convertReadtoKmerList(read)
         kmerList = kmerList + kmers
       species = str(species)
-      bvector = bitarray(rootSize)
-      bvector.setall(0) ##check this 
-      addBF = Bf(species, bvector, rootHashCount)
+      addBF = Bf(species, kmerList, BFsize, BFHashCount)
       BFList.append(addBF) 
 
     print("Constructing Bloom Tree")
