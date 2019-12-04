@@ -3,44 +3,79 @@ from bloom_filter import BloomFilter
 from bloom_node import BloomNode
 from bloom_tree import BloomTree
 from bitarray import bitarray
+
+from fasta_parse import fastaParse
+from fasta_parse import dataParse
+from fasta_parse import goodData
+from fasta_parse import badData
+
 def main():
     tree = BloomTree(0.5);
 
-    arr1 = bitarray(100)
-    arr1.setall(False)
-    bf1 = BloomFilter("a", arr1, 4)
-    bf1.add("hello")
-    arr2 = bitarray(100)
-    arr2.setall(False)
-    bf2 = BloomFilter("b", arr2, 4)
-    bf2.add("potato")
-    arr3 = bitarray(100)
-    arr3.setall(False)
-    bf3 = BloomFilter("c", arr3, 4)
-    bf3.add("tomato")
-    arr4 = bitarray(100)
-    arr4.setall(False)
-    bf4 = BloomFilter("d", arr4, 4)
-    bf4.add("blah")
-    """
-    first = BloomNode(BloomFilter("a", tru_arr, 5))
-    second = BloomNode(BloomFilter("b", fal_arr, 5))
-    third = BloomNode(BloomFilter("c", tru_arr, 5))
-    fourth = BloomNode(BloomFilter("d", fal_arr, 5))
-    """
-    first = BloomNode(bf1)
-    second = BloomNode(bf2)
-    third = BloomNode(bf3)
-    fourth = BloomNode(bf4)
-    tree.add(first)
-    tree.add(second)
-    tree.add(third)
-    tree.add(fourth)
+    bac_folder = sys.argv[1]
+    ref_folder = sys.argv[2]
 
-    tree_str = tree.treeToString(tree.root)
-    print(tree_str)
-    kmer_list = tree.query(["blah", "hello"])
-    for i in kmer_list:
-        print(i.bloom_filter.name)
+    #reads in fasta files
+    bac_dict = dataParse(bac_folder)
+    ref_dict = dataParse(ref_folder)
+
+    #creates datasets
+    n = 500
+    good_dict = goodData(ref_dict, n)
+    bad_dict = badData(bac_dict, n)
+
+    kmer_size = 30	
+    def convertReadtoKmerList(read):
+      kmer_list = []
+      for i in range(len(read)-kmer_size + 1):
+        kmer = read[i:i+kmer_size]
+        kmer_list.append(kmer)
+      return kmer_list
+
+    total_kmerList = []
+    for species in bad_dict:
+      species_dict = bad_dict[species]
+      for readKey in species_dict:
+        read = species_dict[readKey]
+        kmerList = convertReadtoKmerList(read)
+        total_kmerList = total_kmerList + kmerList
+
+    fpr = 0.1 
+    rootSize = self.getBFsize(length(total_kmerList), fpr)
+    rootHashCount = self.getHashFunctionCount(length(total_kmerList),rootSize)
+    
+    print("Constructing species BFs")
+    BFList = []
+    for species in bad_dict:
+      species_dict = bad_dict[species]
+      kmerList = []
+      for readKey in species_dict:
+        read = species_dict[readKey]
+        kmers = convertReadtoKmerList(read)
+        kmerList = kmerList + kmers
+      species = str(species)
+      bvector = bitarray(rootSize)
+      bvector.setall(0) ##check this 
+      addBF = Bf(species, bvector, rootHashCount)
+      BFList.append(addBF) 
+
+    print("Constructing Bloom Tree")
+
+    from bloom_tree import BloomTree
+    from bloom_node import BloomNode
+    inverseBloomTree = BloomTree(0.1)
+    for bloomFilter in BFList:
+      newNode = BloomNode(bloomFilter)
+      inverseBloomTree.add(newNode)   
+
+@classmethod
+def getBFsize(self,n,fpr):
+    m = -(n * math.log(fpr)) / (math.log(2) ** 2)
+    return int(m)
+
+@classmethod
+def get_hashFunctionCount(self, n, m):
+    k = (m / n) * math.log(2)
+    return int(k)
 
 main()
