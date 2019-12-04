@@ -10,7 +10,6 @@ from fasta_parse import goodData
 from fasta_parse import badData
 
 def main():
-    tree = BloomTree(0.5);
 
     bac_folder = sys.argv[1]
     ref_folder = sys.argv[2]
