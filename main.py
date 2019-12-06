@@ -16,20 +16,25 @@ import numpy as np
 import random
 from Bio import SeqIO
 
+import time
+
 def main(myKmer_size, myFpr, myThreshold):
 
     bac_folder = sys.argv[1]
     ref_folder = sys.argv[2]
+    test_folder = sys.argv[3]
 
     #reads in fasta files
     bac_dict = dataParse(bac_folder)
     ref_dict = dataParse(ref_folder)
+    test_dict = dataParse(test_folder)
     
     #creates datasets
     n = 500
     good_dict = goodData(ref_dict, n)
+    #bad_dict = badData(test_dict, n)
     bad_dict = badData(bac_dict, n)
-
+    
     kmer_size = myKmer_size	
     def convertReadtoKmerList(read):
       kmer_list = []
@@ -49,17 +54,14 @@ def main(myKmer_size, myFpr, myThreshold):
     fpr = myFpr
     BFsize = getBFsize(len(total_kmerList), fpr)
     BFHashCount = getHashFunctionCount(len(total_kmerList), BFsize)
-    #print("BFsize: " + str(BFsize))
-    #print("Hash Count: " + str(BFHashCount))
     
-    print("Constructing species BFs")
+    bloomTreeConstructionStartTime = time.time()
+    #print("Constructing species BFs")
     BFList = []
     for species in bac_dict:
-      print(species) 
       species_dict = bac_dict[species]
       kmerList = []
       for readKey in species_dict:
-        #print(readKey)
         read = species_dict[readKey]
         kmers = convertReadtoKmerList(read)
         kmerList = kmerList + kmers
@@ -67,7 +69,7 @@ def main(myKmer_size, myFpr, myThreshold):
       addBF = BloomFilter(species, kmerList, BFsize, BFHashCount) 
       BFList.append(addBF) 
 
-    print("Constructing Bloom Tree")
+    #print("Constructing Bloom Tree")
 
     from bloom_tree import BloomTree
     from bloom_node import BloomNode
@@ -75,13 +77,20 @@ def main(myKmer_size, myFpr, myThreshold):
     for bloomFilter in BFList:
       newNode = BloomNode(bloomFilter)
       inverseBloomTree.add(newNode)
+    
+    bloomTreeConstructionEndTime = time.time()
 
     bloomTreeSize = sys.getsizeof(inverseBloomTree)
     numTotal = 0
     numAccurate = 0
     totalMatches = 0
-    print("Querying")
-    #print(bad_dict.keys())
+    #confusionMatrix = np.zeros(shape = (5,5))    
+
+
+    #print("Querying")
+    
+    queryStartTime = time.time()
+
     for species in bad_dict:
       species_BadDict = bad_dict[species]
       for readID in species_BadDict:
@@ -90,7 +99,6 @@ def main(myKmer_size, myFpr, myThreshold):
         possibleMatches = inverseBloomTree.query(queryKmers)          
         possibleMatchNames = []
         for match in possibleMatches:
-          #print(match.bloom_filter)
           possibleMatchNames.append(match.bloom_filter.getName())
         speciesName = str(species)
         if speciesName in possibleMatchNames:
@@ -100,8 +108,15 @@ def main(myKmer_size, myFpr, myThreshold):
         else:
           numTotal += 1
           totalMatches += len(possibleMatchNames)
+    
+    queryEndTime = time.time()
+
+    
     accuracy = numAccurate/numTotal
     avgMatches = totalMatches/numTotal
+    print("Kmer_length: " + str(kmer_size))
+    print("FPR: " + str(fpr))
+    print("Query Threshold: " + str(myThreshold)) 
     print("Accuracy: " + str(accuracy))
     print("AvgMatches: " + str(avgMatches))        
    
@@ -114,11 +129,16 @@ def main(myKmer_size, myFpr, myThreshold):
       numMouseMatches += len(possibleMatches)
       numQueries += 1
     avgMouseMatches = numMouseMatches/numQueries
+    
     print("avgMouseMatches: " + str(avgMouseMatches))  
    
-    print("BF size: " + str(BFsize))
+    print("Bloom Filter size: " + str(BFsize))
     print("Hash Count: " + str(BFHashCount))
     print("Bloom Tree size: " + str(bloomTreeSize))     
+    bloomTreeConstructionTime = bloomTreeConstructionEndTime - bloomTreeConstructionStartTime
+    queryTime = queryEndTime - queryStartTime
+    print("Construciton Time: " + str(bloomTreeConstructionTime))
+    print("Query Time: " + str(queryTime))
 
 def getBFsize(n,fpr):
     m = -(n * math.log(fpr)) / (math.log(2) ** 2)
@@ -128,4 +148,16 @@ def getHashFunctionCount(n, m):
     k = (m / n) * math.log(2)
     return int(k)
 
-main(5, 0.1, 0.3)
+kmerSizes = [10, 20]
+
+#for kmerSize in kmerSizes:
+#  main(kmerSize, 0.1, 0.3)
+
+fprList = [0.3, 0.5]
+
+for fpr in fprList:
+  main(30, fpr, 0.3)
+
+queryThreshes = [0.1, 0.5]
+for queryThresh in queryThreshes:
+  main(30, 0.1, queryThresh)
