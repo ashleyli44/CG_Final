@@ -21,6 +21,7 @@ pip install biopython
 ```
 
 2. Add reference fasta files to REFERENCE_FOLDER, and add contaminant fasta files to CONTAMINANT_FOLDER
+  - Only necessary for running on new data. The data used in our final report is already in these folders.
 
 3. Run main
 ```
