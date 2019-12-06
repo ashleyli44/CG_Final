@@ -3,7 +3,7 @@ Bloom Tree containing Bloom Nodes
 """
 from queue import Queue
 
-from bloom_factory import BloomFilterFactory
+from bloom_filter import BloomFilter
 from bloom_node import BloomNode
 
 
@@ -12,9 +12,11 @@ class BloomTree:
     """
     @param query_threshold is fraction of kmers that need to match in order to declare a read is a match
     """
-    def __init__(self, query_threshold):
+    def __init__(self, query_threshold, BFsize, h):
         self.root = None
         self.query_threshold = query_threshold  # 0 < query_threshold < 1
+        self.BFsize = BFsize
+        self.h = h
 
     """
     @param new_node is Bloom Node to be added to Bloom Tree
@@ -38,13 +40,13 @@ class BloomTree:
 
             leftDistance = curr_node.left.bloom_filter.compareTo(new_node.bloom_filter)
             rightDistance = curr_node.right.bloom_filter.compareTo(new_node.bloom_filter)
-            print("Left Dist:" + str(leftDistance) + " Right dist: " + str(rightDistance))
+            #print("Left Dist:" + str(leftDistance) + " Right dist: " + str(rightDistance))
             if rightDistance < leftDistance:
                 curr_node = curr_node.right
             else:
                 curr_node = curr_node.left
 
-        parent_bloom_filter = BloomFilterFactory.new_instance()
+        parent_bloom_filter = BloomFilter("", [], self.BFsize, self.h) 
         parent_bloom_filter.union(curr_node.bloom_filter)
         parent_bloom_filter.union(new_node.bloom_filter)
 
