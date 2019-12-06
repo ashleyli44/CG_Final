@@ -12,7 +12,7 @@ Eric Cao, Sandeep Kambhampati, Ashley Li, Robert Li
 - Bitarray
 - Biopython
 
-# Installation Instructions
+# Quickstart Instructions
 1. Install mmh3, bitarray, and biopython
 ```
 pip install mmh3
@@ -20,7 +20,13 @@ pip install bitarray
 pip install biopython
 ```
 
-2. Put fasta files in FOLDER_NAME
-   Need separate folders for the reference genome and contaminant genome
+2. Add reference fasta files to REFERENCE_FOLDER, and add contaminant fasta files to CONTAMINANT_FOLDER
 
-3. Run main (command-line command: python main.py data/contaminants/ data/ref_genome/ data/test/)
+3. Run main
+```
+python main.py data/contaminants/ data/ref_genome/ data/test/
+```
+
+# Installation Issues
+Problem: Installing dependencies fails on Windows machines
+- Solution: Download Visual C++ Build Tools 2015
