@@ -18,4 +18,4 @@ pip install biopython
 2. Put fasta files in FOLDER_NAME
    Need separate folders for the reference genome and contaminant genome
 
-3. Run main()
+3. Run main (command-line command: python main.py data/contaminants/ data/ref_genome/ data/test/)
