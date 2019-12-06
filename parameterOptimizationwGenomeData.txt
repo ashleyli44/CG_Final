@@ -1,0 +1,44 @@
+Kmer_length: 30
+FPR: 0.3
+Query Threshold: 0.3
+Accuracy: 1.0
+AvgMatches: 1.05
+avgMouseMatches: 0.0
+Bloom Filter size: 62764050
+Hash Count: 1
+Bloom Tree size: 56
+Construciton Time: 324.816055059433
+Query Time: 155.55537009239197
+Kmer_length: 30
+FPR: 0.5
+Query Threshold: 0.3
+Accuracy: 1.0
+AvgMatches: 5.0
+avgMouseMatches: 5.0
+Bloom Filter size: 36134308
+Hash Count: 0
+Bloom Tree size: 56
+Construciton Time: 225.54240322113037
+Query Time: 100.3700201511383
+Kmer_length: 30
+FPR: 0.1
+Query Threshold: 0.1
+Accuracy: 1.0
+AvgMatches: 1.056
+avgMouseMatches: 0.0
+Bloom Filter size: 120035574
+Hash Count: 3
+Bloom Tree size: 56
+Construciton Time: 604.3383688926697
+Query Time: 243.45062613487244
+Kmer_length: 30
+FPR: 0.1
+Query Threshold: 0.5
+Accuracy: 1.0
+AvgMatches: 1.048
+avgMouseMatches: 0.0
+Bloom Filter size: 120035574
+Hash Count: 3
+Bloom Tree size: 56
+Construciton Time: 950.2536268234253
+Query Time: 246.81621313095093
