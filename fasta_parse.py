@@ -82,13 +82,16 @@ def badData(data_dict, n):
         species_seq[i,:] = np.array(reads[0:num_entries], dtype = str) 
         #reads may be longer than n_entries depending on how you split it
 
-    #creation of the return dictionary as dictionary of dictionaries, same as good data set            
+     
+    #creation of the return dictionary as dictionary of dictionaries            
     ret_dict = {} 
     for i in range(0, len(species)):
+      species_dict = {}  
       for j in range(0, num_entries):
-            idx = species[i] + "_" + str(j)
-            ret_dict[idx] = species_seq[i,j]
-    
+            idx = species[i] + "_" + str(j) 
+            species_dict[idx] = species_seq[i,j]
+      ret_dict[species[i]] = species_dict 
+
     return(ret_dict)
 
 
@@ -103,4 +106,3 @@ ref_dict = dataParse(ref_folder)
 n = 500
 good_dict = goodData(ref_dict, n)
 bad_dict = badData(bac_dict, n)
-
