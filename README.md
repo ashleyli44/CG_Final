@@ -29,4 +29,4 @@ python main.py data/contaminants/ data/ref_genome/ data/test/
 
 # Installation Issues
 Problem: Installing dependencies fails on Windows machines
-- Solution: Download Visual C++ Build Tools 2015
+- Solution: Download Visual C++ Build Tools from https://visualstudio.microsoft.com/downloads/#build-tools-for-visual-studio-2019
