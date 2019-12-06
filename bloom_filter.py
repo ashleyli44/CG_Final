@@ -11,7 +11,7 @@ class BloomFilter:
         self.kmer_count = len(kmer_list)
         self.BFsize = bf_size 
         self.BF = bitarray(self.BFsize) # bitarray vector that represents the bloom filter
-        #self.BF.setall(0)
+        self.BF.setall(False)
           
         self.h = h  # number of hash functions to use per entry
         
@@ -26,17 +26,17 @@ class BloomFilter:
             w/ 0 being the minimum and len(bf) being the maximum
         """
         # exclusive OR and then calculates the number of set bits
-        return (self.bvector ^ bf.bvector).count(True)
+        return (self.BF ^ bf.BF).count(True)
 
     def add(self, kmer):
         for i in range(self.h):
             hashValue = mmh3.hash(kmer, i) % self.BF.length()
-            self.bvector[hashValue] = True
+            self.BF[hashValue] = True
 
     def contains(self, kmer):
         for i in range(self.h):
             hashValue = mmh3.hash(kmer, i) % self.BF.length()
-            if not self.bvector[hashValue]:
+            if not self.BF[hashValue]:
                 return False
         return True
 
@@ -45,8 +45,11 @@ class BloomFilter:
             self.name = other_bloom_filter.name
         else:
             self.name = self.name + "U" + other_bloom_filter.name
-        for i in range(len(self.bvector)):
-            self.bvector[i] = self.bvector[i] or other_bloom_filter.bvector[i]
+        for i in range(len(self.BF)):
+            self.BF[i] = self.BF[i] or other_bloom_filter.BF[i]
             
     def getBF(self):
         return self.BF
+    
+    def getName(self):
+        return self.name    
