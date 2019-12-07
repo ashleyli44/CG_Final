@@ -1,4 +1,3 @@
-from bloom_factory import BloomFilterFactory
 from bloom_filter import BloomFilter
 from bloom_node import BloomNode
 from bloom_tree import BloomTree
