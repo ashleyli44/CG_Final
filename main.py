@@ -96,7 +96,6 @@ def main(myKmer_size, myFpr, myThreshold, querySequencing):
 
     rowNumber = -1
     for species in bad_dict:
-      print(species)
       rowNumber += 1
       species_BadDict = bad_dict[species]
       for readID in species_BadDict:
