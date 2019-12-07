@@ -26,7 +26,7 @@ pip install biopython
 ```
 python main.py data/contaminants/ data/ref_genome/ data/test/
 ```
-To adjust any parameters of the sequence bloom tree change the desired parameter in the call to the main method at the bottom of main.py. To adjust what dataset is queried, change the parameter in the call to the badData method towards the beginning of the main method in main.py (also identified in comments in main.py). 
+To adjust any parameters of the sequence bloom tree change the desired parameter in the call to the main method at the bottom of main.py. To adjust what dataset is queried, change the final parameter in the call to the main method (True for quering sequencing data and false for querying genomic data). 
 
 # Installation Issues
 Problem: Installing dependencies fails on Windows machines
