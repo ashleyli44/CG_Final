@@ -32,8 +32,11 @@ def main(myKmer_size, myFpr, myThreshold):
     #creates datasets
     n = 500
     good_dict = goodData(ref_dict, n)
-    #bad_dict = badData(test_dict, n)
-    bad_dict = badData(bac_dict, n)
+    
+    #Running bad_dict with test_dict results in querying with sequencing data
+    #Running bad_dict with bac_dict results in querying with genomic data
+    bad_dict = badData(test_dict, n)
+    #bad_dict = badData(bac_dict, n)
     
     kmer_size = myKmer_size	
     def convertReadtoKmerList(read):
@@ -54,7 +57,7 @@ def main(myKmer_size, myFpr, myThreshold):
     fpr = myFpr
     BFsize = getBFsize(len(total_kmerList), fpr)
     BFHashCount = getHashFunctionCount(len(total_kmerList), BFsize)
-    
+ 
     bloomTreeConstructionStartTime = time.time()
     #print("Constructing species BFs")
     BFList = []
@@ -84,14 +87,17 @@ def main(myKmer_size, myFpr, myThreshold):
     numTotal = 0
     numAccurate = 0
     totalMatches = 0
-    #confusionMatrix = np.zeros(shape = (5,5))    
+    confusionMatrix = np.zeros(shape = (6,6))    
 
 
     #print("Querying")
     
     queryStartTime = time.time()
 
+    rowNumber = -1
     for species in bad_dict:
+      print(species)
+      rowNumber += 1
       species_BadDict = bad_dict[species]
       for readID in species_BadDict:
         read = species_BadDict[readID]
@@ -105,9 +111,20 @@ def main(myKmer_size, myFpr, myThreshold):
           numAccurate += 1
           numTotal += 1
           totalMatches += len(possibleMatchNames)
+          if speciesName == "b_vulgatus":
+            confusionMatrix[rowNumber, 3] += 1
+          if speciesName == "bacillus_simplex":
+            confusionMatrix[rowNumber, 2] += 1
+          if speciesName == "klebsiella_pneumoniae":
+            confusionMatrix[rowNumber, 0] += 1
+          if speciesName == "p_glucanolyticus":
+            confusionMatrix[rowNumber, 1] += 1
+          if speciesName == "staph_lentus":
+            confusionMatrix[rowNumber, 4] += 1
         else:
           numTotal += 1
           totalMatches += len(possibleMatchNames)
+          confusionMatrix[rowNumber, 5] += 1
     
     queryEndTime = time.time()
 
@@ -128,6 +145,18 @@ def main(myKmer_size, myFpr, myThreshold):
       possibleMatches = inverseBloomTree.query(queryKmers)
       numMouseMatches += len(possibleMatches)
       numQueries += 1
+      if "b_vulgatus" in possibleMatches:
+        confusionMatrix[5, 0] += 1
+      if "bacillus_simplex" in possibleMatches:
+        confusionMatrix[5, 1] += 1
+      if "klebsiella_pneumoniae" in possibleMatches:
+        confusionMatrix[5, 2] += 1
+      if "p_glucanolyticus" in possibleMatches:
+        confusionMatrix[5, 3] += 1
+      if "staph_lentus" in possibleMatches:
+        confusionMatrix[5, 4] += 1
+      if len(possibleMatches) == 0:
+        confusionMatrix[5, 5] += 1
     avgMouseMatches = numMouseMatches/numQueries
     
     print("avgMouseMatches: " + str(avgMouseMatches))  
@@ -137,8 +166,12 @@ def main(myKmer_size, myFpr, myThreshold):
     print("Bloom Tree size: " + str(bloomTreeSize))     
     bloomTreeConstructionTime = bloomTreeConstructionEndTime - bloomTreeConstructionStartTime
     queryTime = queryEndTime - queryStartTime
-    print("Construciton Time: " + str(bloomTreeConstructionTime))
+    print("Construction Time: " + str(bloomTreeConstructionTime))
     print("Query Time: " + str(queryTime))
+    ##Note, query time measured without construction of confusion matrix
+
+    print("Confusion Matrix: ")
+    print(confusionMatrix)
 
 def getBFsize(n,fpr):
     m = -(n * math.log(fpr)) / (math.log(2) ** 2)
@@ -146,18 +179,12 @@ def getBFsize(n,fpr):
 
 def getHashFunctionCount(n, m):
     k = (m / n) * math.log(2)
+    if (int(k) < 1):
+      return 1
     return int(k)
 
-kmerSizes = [10, 20]
 
-#for kmerSize in kmerSizes:
-#  main(kmerSize, 0.1, 0.3)
-
-fprList = [0.3, 0.5]
-
-for fpr in fprList:
-  main(30, fpr, 0.3)
-
-queryThreshes = [0.1, 0.5]
-for queryThresh in queryThreshes:
-  main(30, 0.1, queryThresh)
+#First parameter is Kmer Length
+#Second parameter is FPR
+#Third Parameter is Query Threshold
+main(30,0.1,0.3)
