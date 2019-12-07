@@ -17,7 +17,7 @@ from Bio import SeqIO
 
 import time
 
-def main(myKmer_size, myFpr, myThreshold):
+def main(myKmer_size, myFpr, myThreshold, querySequencing):
 
     bac_folder = sys.argv[1]
     ref_folder = sys.argv[2]
@@ -32,10 +32,11 @@ def main(myKmer_size, myFpr, myThreshold):
     n = 500
     good_dict = goodData(ref_dict, n)
     
-    #Running bad_dict with test_dict results in querying with sequencing data
-    #Running bad_dict with bac_dict results in querying with genomic data
-    bad_dict = badData(test_dict, n)
-    #bad_dict = badData(bac_dict, n)
+    if querySequencing == True:
+      bad_dict = badData(test_dict, n)
+    
+    if querySequencing == False:
+      bad_dict = badData(bac_dict, n)
     
     kmer_size = myKmer_size	
     def convertReadtoKmerList(read):
@@ -186,4 +187,5 @@ def getHashFunctionCount(n, m):
 #First parameter is Kmer Length
 #Second parameter is FPR
 #Third Parameter is Query Threshold
-main(30,0.1,0.3)
+#Fourth Parameter is whether to query sequencing data (false queries with genomic data)
+main(30,0.1,0.3, True)
